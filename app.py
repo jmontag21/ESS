@@ -57,7 +57,7 @@ if uploaded_files:
                 if not pdf_files:
                     st.error("No PDF files found. Please upload at least one PDF.")
 
-                # New Field Name Mapping
+                # Updated Field Name Mapping to include freight and tax
                 field_name_mapping = {
                     'INVOICE NUMBER': 'INVOICE_NUMBER',
                     'INVOICE DATE': 'INVOICE_DATE',
@@ -68,7 +68,9 @@ if uploaded_files:
                     'TOTAL NON-MERCHANDISE': 'TOTAL_NON_MERCH',
                     'CASH DISCOUNT': 'CASH_DISCOUNT',
                     'NET TOTAL': 'NET_TOTAL',
-                    'PAY': 'PAY'
+                    'PAY': 'PAY',
+                    'FREIGHT': 'FREIGHT',
+                    'TAX': 'TAX'
                 }
 
                 def normalize_field_names(data_dict):
@@ -110,7 +112,9 @@ if uploaded_files:
                                                 "- TOTAL_NON_MERCH\n"
                                                 "- CASH_DISCOUNT\n"
                                                 "- NET_TOTAL\n"
-                                                "- PAY"
+                                                "- PAY\n"
+                                                "- FREIGHT (look for 'Freight')\n"
+                                                "- TAX (look for 'Tax')"
                                             )
                                         },
                                         {
@@ -180,7 +184,7 @@ if uploaded_files:
 
                 if data:
                     df = pd.DataFrame(data)
-                    columns_order = ['INVOICE_DATE', 'INVOICE_NUMBER', 'CUSTOMER_PO', 'MERCH_NOT_SUBJECT_TO_DISCOUNT', 'TOTAL_MERCHANDISE', 'MERCH_SUBJECT_TO_DISCOUNT', 'TOTAL_NON_MERCH', 'CASH_DISCOUNT', 'NET_TOTAL', 'PAY', 'pdf_file']
+                    columns_order = ['INVOICE_DATE', 'INVOICE_NUMBER', 'CUSTOMER_PO', 'MERCH_NOT_SUBJECT_TO_DISCOUNT', 'TOTAL_MERCHANDISE', 'MERCH_SUBJECT_TO_DISCOUNT', 'TOTAL_NON_MERCH', 'CASH_DISCOUNT', 'NET_TOTAL', 'FREIGHT', 'TAX', 'PAY', 'pdf_file']
                     df = df.reindex(columns=columns_order)
                     csv_buffer = df.to_csv(index=False).encode('utf-8')
                     st.session_state.data = data
@@ -193,7 +197,7 @@ if uploaded_files:
     if st.session_state.data:
         with st.spinner("Preparing CSV..."):
             df = pd.DataFrame(st.session_state.data)
-            columns_order = ['INVOICE_DATE', 'INVOICE_NUMBER', 'CUSTOMER_PO', 'MERCH_NOT_SUBJECT_TO_DISCOUNT', 'TOTAL_MERCHANDISE', 'MERCH_SUBJECT_TO_DISCOUNT', 'TOTAL_NON_MERCH', 'CASH_DISCOUNT', 'NET_TOTAL', 'PAY', 'pdf_file']
+            columns_order = ['INVOICE_DATE', 'INVOICE_NUMBER', 'CUSTOMER_PO', 'MERCH_NOT_SUBJECT_TO_DISCOUNT', 'TOTAL_MERCHANDISE', 'MERCH_SUBJECT_TO_DISCOUNT', 'TOTAL_NON_MERCH', 'CASH_DISCOUNT', 'NET_TOTAL', 'FREIGHT', 'TAX', 'PAY', 'pdf_file']
             df = df.reindex(columns=columns_order)
             csv_buffer = df.to_csv(index=False).encode('utf-8')
 
